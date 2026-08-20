@@ -1,50 +1,52 @@
 # 3d-reconstruction
 
-Modular internship project. Built piece by piece so each module can change later.
+Modular internship project: video → 3D GLB.
 
-| # | Module | Status |
-|---|--------|--------|
-| 1 | **UI** (`ui/`) | Live — video upload + processing UI |
-| 2 | **API** (`api/`) | Live — jobs + Hello World result |
-| 3 | **Database** (`database/`) | Placeholder (jobs are in memory) |
-| 4 | **Queuing** (`queueing/`) | Placeholder (background thread stub) |
-| 5 | **Model + CLI** (`model/`) | Placeholder (returns Hello World) |
+| Module | Status |
+|--------|--------|
+| UI | Live |
+| API | Live |
+| Database | Placeholder (`jobs/` on disk for now) |
+| Queuing | Placeholder (thread stub) |
+| **Model** | **Live via Google Colab + Hugging Face VGGT** |
+
+## Why Colab?
+
+Apple Silicon has no NVIDIA CUDA. VGGT needs a GPU, so inference runs on **Google Colab** using weights from **`facebook/VGGT-1B`** on Hugging Face. The app stores the video and serves the GLB.
 
 ## Branches
 
 | Branch | Contents |
 |--------|----------|
 | `feature/01-ui-api-hello` | Text Hello World |
-| `feature/02-video-upload` | Video upload flow (this branch) |
-| `main` | Final merge target |
+| `feature/02-video-upload` | Video upload + Hello World |
+| `feature/03-model` | Video → Colab VGGT → GLB |
 
-## Current flow
-
-1. User uploads a video (**&lt; 200 MB**)
-2. UI shows **Video is processing** with progress
-3. API returns **Hello World** (real 3D comes when Model is wired)
-
-## Run (VS Code: two terminals)
+## Run
 
 ```bash
 cd ~/3d-reconstruction
+git checkout feature/03-model
 source .venv/bin/activate
 pip install -r requirements.txt
 
-# terminal 1
 uvicorn api.main:app --host 127.0.0.1 --port 8000
-
-# terminal 2
 streamlit run ui/app.py
 ```
 
-- UI: http://localhost:8501
-- API docs: http://127.0.0.1:8000/docs
+## Model steps
+
+1. Upload video in the UI
+2. Open `notebooks/colab_vggt_video_to_glb.ipynb` in Colab (**GPU**)
+3. Upload the same video → download `scene.glb`
+4. Attach GLB in the UI → download 3D
 
 ## API
 
 ```http
-GET  /health
-POST /v1/jobs              # multipart field: video
-GET  /v1/jobs/{job_id}     # status + result
+POST /v1/jobs
+GET  /v1/jobs/{id}
+GET  /v1/jobs/{id}/video
+POST /v1/jobs/{id}/glb
+GET  /v1/jobs/{id}/glb
 ```
