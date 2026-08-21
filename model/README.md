@@ -14,4 +14,4 @@ Streamlit upload → processing → both files available in the same UI.
 Heavy inference uses **VGGT** (`facebook/VGGT-1B` on Hugging Face) on a GPU.
 On Mac, use the Colab notebook until an automatic GPU worker exists.
 
-Notebook: `notebooks/colab_vggt_video_to_glb.ipynb`
+Notebook: `notebooks/colab_vggt_video_to_glb.ipynb`\n\n(Also mirrored as `notebooks/colab_video_to_glb_and_flythrough.ipynb`.)
