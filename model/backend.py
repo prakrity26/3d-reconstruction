@@ -1,9 +1,4 @@
-"""Model contract used by the API.
-
-Real neural inference happens on Colab (see notebooks/).
-This module owns paths and GLB attachment so Database/Queueing can swap later
-without changing the UI.
-"""
+"""Model contract: video → scene.glb + flythrough.mp4."""
 
 from __future__ import annotations
 
@@ -33,19 +28,32 @@ def glb_path(job_id: str) -> Path:
     return job_path(job_id) / "scene.glb"
 
 
-def attach_glb(job_id: str, source: Path | bytes, filename: str = "scene.glb") -> Path:
-    """Save a reconstructed GLB for a job (typically produced on Colab)."""
-    dest = glb_path(job_id)
+def flythrough_path(job_id: str) -> Path:
+    return job_path(job_id) / "flythrough.mp4"
+
+
+def attach_file(job_id: str, dest: Path, source: Path | bytes, empty_msg: str) -> Path:
     if isinstance(source, bytes):
         dest.write_bytes(source)
     else:
         shutil.copyfile(source, dest)
     if dest.stat().st_size == 0:
         dest.unlink(missing_ok=True)
-        raise ValueError("GLB file is empty")
+        raise ValueError(empty_msg)
+    return dest
+
+
+def attach_glb(job_id: str, source: Path | bytes, filename: str = "scene.glb") -> Path:
     if not filename.lower().endswith(".glb"):
         raise ValueError("Expected a .glb file")
-    return dest
+    return attach_file(job_id, glb_path(job_id), source, "GLB file is empty")
+
+
+def attach_flythrough(job_id: str, source: Path | bytes, filename: str = "flythrough.mp4") -> Path:
+    lower = filename.lower()
+    if not (lower.endswith(".mp4") or lower.endswith(".webm") or lower.endswith(".mov")):
+        raise ValueError("Expected a video file (.mp4 / .webm / .mov)")
+    return attach_file(job_id, flythrough_path(job_id), source, "Flythrough file is empty")
 
 
 def describe_backend() -> dict[str, Any]:
@@ -53,6 +61,9 @@ def describe_backend() -> dict[str, Any]:
         "inference": "colab_vggt",
         "weights": "https://huggingface.co/facebook/VGGT-1B",
         "notebook": "notebooks/colab_vggt_video_to_glb.ipynb",
-        "local_gpu": False,
-        "note": "Run the Colab notebook on a GPU runtime, then upload the GLB to the API.",
+        "outputs": ["scene.glb", "flythrough.mp4"],
+        "note": (
+            "End user should only use Streamlit. Until a GPU worker is automated, "
+            "run the Colab notebook and attach both outputs to the job."
+        ),
     }

@@ -1,5 +1,19 @@
-"""Model module — video → 3D GLB (runs on Colab / GPU; local is the contract)."""
+"""Model module — video → GLB + flythrough MP4."""
 
-from model.backend import attach_glb, describe_backend, jobs_dir
+from model.backend import (
+    attach_flythrough,
+    attach_glb,
+    describe_backend,
+    flythrough_path,
+    glb_path,
+    jobs_dir,
+)
 
-__all__ = ["attach_glb", "describe_backend", "jobs_dir"]
+__all__ = [
+    "attach_flythrough",
+    "attach_glb",
+    "describe_backend",
+    "flythrough_path",
+    "glb_path",
+    "jobs_dir",
+]
