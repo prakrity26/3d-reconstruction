@@ -1,3 +1,11 @@
+# Product goal
+
+## Model choice
+Use **LingBot-Map** for reconstruction quality (official internship model).
+Colab notebook: `notebooks/colab_lingbot_video_to_glb.ipynb`
+
+VGGT notebooks are experimental only.
+
 # Product goal (what the user should experience)
 
 ## One sentence

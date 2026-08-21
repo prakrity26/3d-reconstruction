@@ -121,7 +121,7 @@ elif current == "artifacts":
         """
 <div class="panel">
   <h3>3. Attach reconstruction outputs</h3>
-  <p>Final product hides this step. For now (no automatic GPU on Mac), run the Colab notebook on your uploaded video, then attach <strong>both</strong> files below.</p>
+  <p>Final product hides this step. For now (no automatic GPU on Mac), run <code>notebooks/colab_lingbot_video_to_glb.ipynb</code> on your uploaded video, then attach the LingBot <code>scene.glb</code> (and flythrough later).</p>
 </div>
 """,
         unsafe_allow_html=True,
@@ -129,7 +129,7 @@ elif current == "artifacts":
     st.markdown(
         f"""
 1. Download the uploaded video: [{API_URL}/v1/jobs/{job_id}/video]({API_URL}/v1/jobs/{job_id}/video)
-2. Open `notebooks/colab_vggt_video_to_glb.ipynb` in Colab (**GPU**)
+2. Open `notebooks/colab_lingbot_video_to_glb.ipynb` in Colab (**GPU**)
 3. Run it → download **`scene.glb`** and **`flythrough.mp4`**
 4. Upload both here
 """
